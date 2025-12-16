@@ -1,4 +1,5 @@
 const { healthController } = require("../controllers/health.controller.js");
+const { getUsersController } = require("../controllers/user.controller.js");
 
 // Central router function
 // Decides which controller will handle the request
@@ -6,6 +7,10 @@ const { healthController } = require("../controllers/health.controller.js");
 function router(req, res) {
   if (req.url == "/health" && req.method == "GET") {
     return healthController(req, res);
+  }
+
+  if (req.url == "/users" && req.method == "GET") {
+    return getUsersController(req, res);
   }
 
   // Fallback for unknown routes
