@@ -5,14 +5,20 @@ const {
 
 const { parseJsonBody } = require("../utils/body-parser.js");
 
+const { handleError } = require("../utils/error-handler.js");
+
 // Handles HTTP concerns only
 
 // GET /users
 function getUsersController(req, res) {
-  const users = getUsersService();
+  try {
+    const users = getUsersService();
 
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ data: users }));
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ data: users }));
+  } catch (error) {
+    handleError(error, res);
+  }
 }
 
 // POST /users
@@ -25,11 +31,7 @@ async function createUserController(req, res) {
     res.writeHead(201, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ data: user }));
   } catch (error) {
-    res.writeHead(error.statusCode || 500, {
-      "Content-Type": "application/json",
-    });
-
-    res.end(JSON.stringify({ message: error.message }));
+    handleError(error, res);
   }
 }
 
