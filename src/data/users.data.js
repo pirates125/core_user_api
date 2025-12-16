@@ -1,2 +1,2 @@
-const users = [{ id: 1, name: "kaan", age: 25 }];
+const users = [{ id: 1, name: "kaan" }];
 module.exports = users;

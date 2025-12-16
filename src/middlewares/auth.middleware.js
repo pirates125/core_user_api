@@ -7,7 +7,13 @@ function authMiddleware(req) {
   const authHeader = req.headers["authorization"];
 
   if (!authHeader) {
-    throw new HttpError(401, "Unauthorized");
+    throw new HttpError(401, "unauthorization.");
+  }
+
+  const [type, token] = authHeader.trim().split(" ");
+
+  if (type !== "Bearer" && !token) {
+    throw new HttpError(401, "authorization format must be: Bearer <token>");
   }
 }
 

@@ -21,7 +21,33 @@ function createUserService(user) {
   return user;
 }
 
+function updateUserService(id, updateData) {
+  if (!updateData.name) {
+    throw new HttpError(400, "name is required");
+  }
+
+  const userIndex = users.findIndex((u) => u.id === id);
+
+  if (userIndex === -1) {
+    throw new HttpError(404, "user not found");
+  }
+
+  const updatedUser = {
+    ...users[userIndex],
+    ...updateData,
+  };
+
+  users[userIndex] = updatedUser;
+
+  log("info", "user updated", {
+    userId: id,
+  });
+
+  return updatedUser;
+}
+
 module.exports = {
   getUsersService,
   createUserService,
+  updateUserService,
 };

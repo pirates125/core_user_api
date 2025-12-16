@@ -2,6 +2,7 @@ const { healthController } = require("../controllers/health.controller.js");
 const {
   getUsersController,
   createUserController,
+  updateUserController,
 } = require("../controllers/user.controller.js");
 
 const { authMiddleware } = require("../middlewares/auth.middleware");
@@ -26,6 +27,12 @@ function router(req, res) {
 
   if (req.url == "/users" && req.method == "POST") {
     return createUserController(req, res);
+  }
+
+  let id = +req.url.split("/")[2];
+
+  if (req.url == `/users/${id}` && req.method == "PATCH") {
+    return updateUserController(req, res, id);
   }
 
   // Fallback for unknown routes
