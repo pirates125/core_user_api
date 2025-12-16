@@ -4,6 +4,8 @@ const {
   createUserController,
 } = require("../controllers/user.controller.js");
 
+const { authMiddleware } = require("../middlewares/auth.middleware");
+
 // Central router function
 // Decides which controller will handle the request
 
@@ -12,6 +14,10 @@ function router(req, res) {
 
   if (req.url == "/health" && req.method == "GET") {
     return healthController(req, res);
+  }
+
+  if (req.url.startsWith("/users")) {
+    authMiddleware(req);
   }
 
   if (req.url == "/users" && req.method == "GET") {
