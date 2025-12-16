@@ -8,6 +8,8 @@ const {
 // Decides which controller will handle the request
 
 function router(req, res) {
+  // As the router gets larger, it will be broken down into parts.
+
   if (req.url == "/health" && req.method == "GET") {
     return healthController(req, res);
   }
