@@ -16,23 +16,39 @@ const {
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 50;
 
+const ALLOWED_SORT_FIELDS = ["id", "name"];
+const ALLOWED_ORDER = ["asc", "desc"];
+
 async function getAllUsersService(query) {
   let limit = Number(query.limit) || DEFAULT_LIMIT;
   let offset = Number(query.offset) || 0;
 
-  if (limit > MAX_LIMIT) {
-    limit = MAX_LIMIT;
+  if (limit > MAX_LIMIT) limit = MAX_LIMIT;
+  if (limit < 1) limit = DEFAULT_LIMIT;
+  if (offset < 0) offset = 0;
+
+  const filters = {};
+  if (query.name) {
+    filters.name = query.name;
   }
 
-  if (limit < 1) {
-    limit = DEFAULT_LIMIT;
+  let sort = "id";
+  if (ALLOWED_SORT_FIELDS.includes(query.sort)) {
+    sort = query.sort;
   }
 
-  if (offset < 0) {
-    offset = 0;
+  let order = "asc";
+  if (ALLOWED_ORDER.includes(query.order)) {
+    order = query.order;
   }
 
-  return findAllUsers({ limit, offset });
+  return findAllUsers({
+    limit,
+    offset,
+    filters,
+    sort,
+    order,
+  });
 }
 
 async function getUserService(id) {
