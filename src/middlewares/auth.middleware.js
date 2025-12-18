@@ -3,18 +3,32 @@ const { HttpError } = require("../errors/http-error.js");
 // Simple authorization check
 // This is NOT real auth, only architectural demonstration
 
-function authMiddleware(req) {
+function authMiddleware(req, res) {
   const authHeader = req.headers["authorization"];
 
   if (!authHeader) {
-    throw new HttpError(401, "unauthorization.");
+    res.writeHead(401, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        status: "error",
+        message: "Unauthorized",
+      })
+    );
+    return false;
   }
 
-  const [type, token] = authHeader.trim().split(" ");
-
-  if (type !== "Bearer" && !token) {
-    throw new HttpError(401, "authorization format must be: Bearer <token>");
+  if (!authHeader.includes("Bearer")) {
+    res.writeHead(401, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        status: "error",
+        message: "Invalid authorization format",
+      })
+    );
+    return false;
   }
+
+  return true;
 }
 
 module.exports = {

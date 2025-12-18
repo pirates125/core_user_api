@@ -7,50 +7,61 @@ const {
   deleteUserController,
 } = require("../controllers/user.controller.js");
 
-const { authMiddleware } = require("../middlewares/auth.middleware");
-
-// Central router function
-// Decides which controller will handle the request
+const { authMiddleware } = require("../middlewares/auth.middleware.js");
 
 function router(req, res) {
-  // As the router gets larger, it will be broken down into parts.
+  const pathname = req.url.split("?")[0];
 
-  if (req.url == "/health" && req.method == "GET") {
+  // ---------- PUBLIC ROUTES (NO AUTH) ----------
+
+  if (pathname === "/" && req.method === "GET") {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    return res.end("OK");
+  }
+
+  if (pathname === "/health" && req.method === "GET") {
     return healthController(req, res);
   }
 
-  if (req.url.startsWith("/users")) {
-    authMiddleware(req);
+  // ---------- AUTH MIDDLEWARE ----------
+  if (!authMiddleware(req, res)) {
+    return;
   }
 
-  const pathname = req.url.split("?")[0];
+  // ---------- USERS ROUTES ----------
 
   if (pathname === "/users" && req.method === "GET") {
     return getAllUsersController(req, res);
   }
 
-  const id = Number(req.url.split("/")[2]);
-
-  if (req.url.startsWith("/users/") && req.method === "GET") {
-    return getUserController(req, res, id);
-  }
-
-  if (req.url.startsWith("/users") && req.method == "POST") {
+  if (pathname === "/users" && req.method === "POST") {
     return createUserController(req, res);
   }
 
-  if (req.url.startsWith("/users/") && req.method === "PATCH") {
-    return updateUserController(req, res, id);
+  if (pathname.startsWith("/users/")) {
+    const id = Number(pathname.split("/")[2]);
+
+    if (!id) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify({ message: "Invalid user id" }));
+    }
+
+    if (req.method === "GET") {
+      return getUserController(req, res, id);
+    }
+
+    if (req.method === "PATCH") {
+      return updateUserController(req, res, id);
+    }
+
+    if (req.method === "DELETE") {
+      return deleteUserController(req, res, id);
+    }
   }
 
-  if (req.url.startsWith("/users/") && req.method === "DELETE") {
-    return deleteUserController(req, res, id);
-  }
-
-  // Fallback for unknown routes
-
+  // ---------- FALLBACK ----------
   res.writeHead(404, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ message: "not found." }));
+  res.end(JSON.stringify({ message: "Route not found" }));
 }
 
 module.exports = { router };
