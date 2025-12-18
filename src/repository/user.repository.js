@@ -1,5 +1,31 @@
 const pool = require("../config/db.js");
 
+async function createUserWithProfile(user) {
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const userResult = await client.query(
+      "INSERT INTO users (name) VALUES ($1) RETURNING id",
+      [user.name]
+    );
+
+    const userId = userResult.rows[0].id;
+
+    await client.query("INSERT INTO profiles (user_id) VALUES ($1)", [userId]);
+
+    await client.query("COMMIT");
+
+    return { userId };
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 async function findAllUsers({ limit, offset, filters, sort, order }) {
   let baseQuery = `
     SELECT id, name
