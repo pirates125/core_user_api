@@ -1,16 +1,27 @@
 // Simple application logger
 // Central place for all logs
-function log(level, message, meta = {}) {
-  const timestamp = new Date().toISOString();
+const fs = require("fs");
+const path = require("path");
 
+const LOG_FILE = path.join(__dirname, "../logs/app.log");
+
+function writeLog(level, message, meta = {}) {
   const logEntry = {
-    timestamp,
+    timestamp: new Date().toISOString(),
     level,
     message,
     ...meta,
   };
 
-  console.log(JSON.stringify(logEntry));
+  fs.appendFile(LOG_FILE, JSON.stringify(logEntry) + "\n", (err) => {
+    if (err) {
+      console.error("LOG WRITE FAILED", err);
+    }
+  });
+}
+
+function log(level, message, meta) {
+  writeLog(level.toUpperCase(), message, meta);
 }
 
 module.exports = {

@@ -14,6 +14,7 @@ const { HttpError } = require("../errors/http-error.js");
 
 const { parseQuery } = require("../utils/parse-query.js");
 
+const { log } = require("../utils/logger");
 // Handles HTTP concerns only
 
 // GET /users
@@ -60,6 +61,11 @@ async function updateUserController(req, res, id) {
   try {
     const body = await parseJsonBody(req);
     const user = await updateUserService(id, body);
+
+    log("info", "user updated", {
+      requestId: req.requestId,
+      userId: id,
+    });
 
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ data: user }));

@@ -1,19 +1,21 @@
-// Central error response handler
-// Converts thrown errors into HTTP responses
-
-const { log } = require("./logger.js");
+const { log } = require("../utils/logger");
 
 function handleError(error, res) {
-  const statusCode = error.statusCode || 500;
-
   log("error", error.message, {
-    statusCode,
+    status: error.statusCode || 500,
   });
 
-  const message = statusCode === 500 ? "Internal server error." : error.message;
+  res.writeHead(error.statusCode || 500, {
+    "Content-Type": "application/json",
+  });
 
-  res.writeHead(statusCode, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ message }));
+  res.end(
+    JSON.stringify({
+      error: error.message,
+    })
+  );
 }
 
-module.exports = { handleError };
+module.exports = {
+  handleError,
+};
