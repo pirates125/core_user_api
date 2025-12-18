@@ -1,6 +1,6 @@
 const http = require("http");
 
-const { PORT } = require("./config/env.js");
+const env = require("./config/env");
 
 const { router } = require("./routes");
 
@@ -14,6 +14,6 @@ const server = http.createServer((request, response) => {
   router(request, response);
 });
 
-server.listen(PORT, () => {
-  console.log(`Server started at ${PORT}`);
+server.listen(env.port, () => {
+  console.log(`Server running on port ${env.port}`);
 });
