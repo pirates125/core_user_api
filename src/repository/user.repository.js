@@ -1,14 +1,15 @@
 const pool = require("../config/db.js");
 
-async function findAllUsers() {
+async function findAllUsers({ limit, offset }) {
   const query = `
     SELECT id, name
     FROM users
     WHERE deleted_at IS NULL
     ORDER BY id ASC
+    LIMIT $1 OFFSET $2
   `;
 
-  const result = await pool.query(query);
+  const result = await pool.query(query, [limit, offset]);
   return result.rows;
 }
 

@@ -23,7 +23,9 @@ function router(req, res) {
     authMiddleware(req);
   }
 
-  if (req.url == "/users" && req.method == "GET") {
+  const pathname = req.url.split("?")[0];
+
+  if (pathname === "/users" && req.method === "GET") {
     return getAllUsersController(req, res);
   }
 

@@ -12,12 +12,15 @@ const { handleError } = require("../utils/error-handler.js");
 
 const { HttpError } = require("../errors/http-error.js");
 
+const { parseQuery } = require("../utils/parse-query.js");
+
 // Handles HTTP concerns only
 
 // GET /users
 async function getAllUsersController(req, res) {
   try {
-    const users = await getAllUsersService();
+    const query = parseQuery(req);
+    const users = await getAllUsersService(query);
 
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ data: users }));
