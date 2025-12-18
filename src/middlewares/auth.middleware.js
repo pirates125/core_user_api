@@ -8,26 +8,17 @@ function authMiddleware(req, res) {
 
   if (!authHeader) {
     res.writeHead(401, { "Content-Type": "application/json" });
-    res.end(
-      JSON.stringify({
-        status: "error",
-        message: "Unauthorized",
-      })
-    );
+    res.end(JSON.stringify({ message: "Authorization header missing" }));
     return false;
   }
 
-  if (!authHeader.includes("Bearer")) {
+  if (!authHeader.startsWith("Bearer ")) {
     res.writeHead(401, { "Content-Type": "application/json" });
-    res.end(
-      JSON.stringify({
-        status: "error",
-        message: "Invalid authorization format",
-      })
-    );
+    res.end(JSON.stringify({ message: "Invalid authorization format" }));
     return false;
   }
 
+  // şimdilik token validate ETMİYORUZ (bilinçli)
   return true;
 }
 
