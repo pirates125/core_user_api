@@ -1,53 +1,81 @@
 const users = require("../data/users.data.js");
 const { HttpError } = require("../errors/http-error.js");
 const { log } = require("../utils/logger.js");
+const {
+  findUserById,
+  createUser,
+  findAllUsers,
+  findUserByName,
+  updateUserById,
+} = require("../repository/user.repository.js");
 
 // User service
 // Contains business-related logic (currently minimal)
 
-function getUsersService() {
+async function getAllUsersService() {
+  const users = await findAllUsers();
+
   return users;
 }
 
-function createUserService(user) {
-  if (!user.name) {
-    throw new HttpError(400, "user name is required.");
+async function getUserService(id) {
+  if (!id) {
+    throw new HttpError(400, "Id is required.");
   }
 
-  log("info", "User creation requested", {
-    name: user.name,
-  });
+  const user = await findUserById(id);
+
+  if (!user) {
+    throw new HttpError(404, "User not found.");
+  }
 
   return user;
 }
 
-function updateUserService(id, updateData) {
-  if (!updateData.name) {
+async function createUserService(user) {
+  if (!user.name) {
     throw new HttpError(400, "name is required");
   }
 
-  const userIndex = users.findIndex((u) => u.id === id);
+  const existingUser = await findUserByName(user.name);
 
-  if (userIndex === -1) {
+  if (existingUser) {
+    throw new HttpError(409, "user with this name already exists");
+  }
+
+  const newUser = await createUser(user.name);
+  return newUser;
+}
+
+async function updateUserService(id, payload) {
+  if (!id) {
+    throw new HttpError(400, "id is required");
+  }
+
+  if (!payload || Object.keys(payload).length === 0) {
+    throw new HttpError(400, "update payload is required");
+  }
+
+  const existingUser = await findUserById(id);
+  if (!existingUser) {
     throw new HttpError(404, "user not found");
   }
 
-  const updatedUser = {
-    ...users[userIndex],
-    ...updateData,
-  };
+  if (payload.name) {
+    const userWithSameName = await findUserByName(payload.name);
 
-  users[userIndex] = updatedUser;
+    if (userWithSameName && userWithSameName.id !== id) {
+      throw new HttpError(409, "user with this name already exists");
+    }
+  }
 
-  log("info", "user updated", {
-    userId: id,
-  });
-
+  const updatedUser = await updateUserById(id, payload.name);
   return updatedUser;
 }
 
 module.exports = {
-  getUsersService,
+  getUserService,
   createUserService,
+  getAllUsersService,
   updateUserService,
 };

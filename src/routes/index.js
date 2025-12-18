@@ -1,6 +1,7 @@
 const { healthController } = require("../controllers/health.controller.js");
 const {
-  getUsersController,
+  getAllUsersController,
+  getUserController,
   createUserController,
   updateUserController,
 } = require("../controllers/user.controller.js");
@@ -22,16 +23,20 @@ function router(req, res) {
   }
 
   if (req.url == "/users" && req.method == "GET") {
-    return getUsersController(req, res);
+    return getAllUsersController(req, res);
   }
 
-  if (req.url == "/users" && req.method == "POST") {
+  const id = Number(req.url.split("/")[2]);
+
+  if (req.url.startsWith("/users/") && req.method === "GET") {
+    return getUserController(req, res, id);
+  }
+
+  if (req.url.startsWith("/users") && req.method == "POST") {
     return createUserController(req, res);
   }
 
-  let id = +req.url.split("/")[2];
-
-  if (req.url == `/users/${id}` && req.method == "PATCH") {
+  if (req.url.startsWith("/users/") && req.method === "PATCH") {
     return updateUserController(req, res, id);
   }
 
