@@ -1,3 +1,14 @@
 {"timestamp":"2025-12-18T19:54:59.065Z","level":"INFO","message":"request started","requestId":"7cd1d8c6-f4a8-4d02-91f4-d2f7f1168d5a","method":"PATCH","url":"/users/4"}
 {"timestamp":"2025-12-18T19:54:59.073Z","level":"INFO","message":"user updated","requestId":"7cd1d8c6-f4a8-4d02-91f4-d2f7f1168d5a","userId":4}
 {"timestamp":"2025-12-18T19:54:59.073Z","level":"INFO","message":"request finished","requestId":"7cd1d8c6-f4a8-4d02-91f4-d2f7f1168d5a","statusCode":200,"durationMs":8}
+{"timestamp":"2025-12-18T22:24:20.101Z","level":"INFO","message":"request started","requestId":"f44b2a69-5cf6-4aae-91e1-fd6c26b01899","method":"GET","url":"/users"}
+{"timestamp":"2025-12-18T22:24:20.117Z","level":"ERROR","message":"role \"postgres\" does not exist","status":500}
+{"timestamp":"2025-12-18T22:24:20.119Z","level":"INFO","message":"request finished","requestId":"f44b2a69-5cf6-4aae-91e1-fd6c26b01899","statusCode":500,"durationMs":18}
+{"timestamp":"2025-12-18T22:24:53.919Z","level":"INFO","message":"request started","requestId":"f3852f41-e9e0-4694-8062-ba86d8c6d0ce","method":"GET","url":"/users"}
+{"timestamp":"2025-12-18T22:24:53.933Z","level":"ERROR","message":"role \"postgres\" does not exist","status":500}
+{"timestamp":"2025-12-18T22:24:53.935Z","level":"INFO","message":"request finished","requestId":"f3852f41-e9e0-4694-8062-ba86d8c6d0ce","statusCode":500,"durationMs":16}
+{"timestamp":"2025-12-18T22:25:27.272Z","level":"INFO","message":"request started","requestId":"cee794e8-2601-4806-87b6-892d142d65db","method":"GET","url":"/users"}
+{"timestamp":"2025-12-18T22:25:27.275Z","level":"ERROR","message":"role \"postgres\" does not exist","status":500}
+{"timestamp":"2025-12-18T22:25:27.275Z","level":"INFO","message":"request finished","requestId":"cee794e8-2601-4806-87b6-892d142d65db","statusCode":500,"durationMs":3}
+{"timestamp":"2025-12-18T22:25:33.191Z","level":"INFO","message":"request started","requestId":"f7a7f8b5-a5aa-4f9d-a832-ce0a80625847","method":"GET","url":"/users"}
+{"timestamp":"2025-12-18T22:25:33.210Z","level":"INFO","message":"request finished","requestId":"f7a7f8b5-a5aa-4f9d-a832-ce0a80625847","statusCode":200,"durationMs":19}
