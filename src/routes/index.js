@@ -4,6 +4,7 @@ const {
   getUserController,
   createUserController,
   updateUserController,
+  deleteUserController,
 } = require("../controllers/user.controller.js");
 
 const { authMiddleware } = require("../middlewares/auth.middleware");
@@ -38,6 +39,10 @@ function router(req, res) {
 
   if (req.url.startsWith("/users/") && req.method === "PATCH") {
     return updateUserController(req, res, id);
+  }
+
+  if (req.url.startsWith("/users/") && req.method === "DELETE") {
+    return deleteUserController(req, res, id);
   }
 
   // Fallback for unknown routes

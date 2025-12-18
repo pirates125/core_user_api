@@ -7,6 +7,7 @@ const {
   findAllUsers,
   findUserByName,
   updateUserById,
+  softDeleteUserById,
 } = require("../repository/user.repository.js");
 
 // User service
@@ -73,9 +74,24 @@ async function updateUserService(id, payload) {
   return updatedUser;
 }
 
+async function deleteUserService(id) {
+  if (!id) {
+    throw new HttpError(400, "id is required");
+  }
+
+  const deletedUser = await softDeleteUserById(id);
+
+  if (!deletedUser) {
+    throw new HttpError(404, "user not found or already deleted");
+  }
+
+  return deletedUser;
+}
+
 module.exports = {
   getUserService,
   createUserService,
   getAllUsersService,
   updateUserService,
+  deleteUserService,
 };

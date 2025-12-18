@@ -4,6 +4,7 @@ async function findAllUsers() {
   const query = `
     SELECT id, name
     FROM users
+    WHERE deleted_at IS NULL
     ORDER BY id ASC
   `;
 
@@ -16,6 +17,7 @@ async function findUserByName(name) {
     SELECT id
     FROM users
     WHERE name = $1
+    
   `;
 
   const result = await pool.query(query, [name]);
@@ -29,8 +31,21 @@ async function findUserByName(name) {
 
 async function findUserById(id) {
   const query = `
-        SELECT id, name FROM users WHERE id = $1
+        SELECT id, name FROM users WHERE id = $1 AND deleted_at IS NULL
     `;
+
+  const result = await pool.query(query, [id]);
+  return result.rows[0] || null;
+}
+
+async function softDeleteUserById(id) {
+  const query = `
+    UPDATE users
+    SET deleted_at = NOW()
+    WHERE id = $1
+      AND deleted_at IS NULL
+    RETURNING id
+  `;
 
   const result = await pool.query(query, [id]);
   return result.rows[0] || null;
@@ -65,4 +80,5 @@ module.exports = {
   findAllUsers,
   findUserByName,
   updateUserById,
+  softDeleteUserById,
 };

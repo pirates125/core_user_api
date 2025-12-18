@@ -3,6 +3,7 @@ const {
   createUserService,
   getAllUsersService,
   updateUserService,
+  deleteUserService,
 } = require("../services/user.service.js");
 
 const { parseJsonBody } = require("../utils/body-parser.js");
@@ -64,9 +65,22 @@ async function updateUserController(req, res, id) {
   }
 }
 
+// DELETE /users/:id
+async function deleteUserController(req, res, id) {
+  try {
+    await deleteUserService(id);
+
+    res.writeHead(204);
+    res.end();
+  } catch (error) {
+    handleError(error, res);
+  }
+}
+
 module.exports = {
   getUserController,
   getAllUsersController,
   createUserController,
   updateUserController,
+  deleteUserController,
 };
